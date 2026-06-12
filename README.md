@@ -24,3 +24,6 @@ Executar o conteúdo de `supabase/schema.sql` no SQL Editor do Supabase.
 
 ## Deploy
 Fazer push para GitHub e importar o repositório na Vercel.
+
+
+<!-- Atualizacao para disparar redeploy Vercel -->
