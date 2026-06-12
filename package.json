@@ -6,6 +6,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@supabase/supabase-js": "^2.45.4",
-    "openai": "^4.72.0"
+    "mammoth": "^1.8.0",
+    "openai": "^4.72.0",
+    "pdfjs-dist": "^4.10.38"
   }
 }
