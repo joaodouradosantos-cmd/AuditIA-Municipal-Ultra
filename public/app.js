@@ -64,9 +64,10 @@ function renameRecord(id){
     rec.customName = newName.trim();
     renderRecords();
     persistLocal();
-    queueCloudSave();
   }
-}
+  queueCloudSave();
+ 
+  
 
 function renderRecords(){
   const el = document.getElementById("records");
