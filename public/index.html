@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AuditIA Municipal Ultra</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>AuditIA Municipal Ultra</h1>
+    <p>Auditoria municipal, contratação, controlo interno, relatórios e IA jurídica</p>
+  </div>
+  <b>ONLINE</b>
+</header>
+
+<nav id="tabs"></nav>
+
+<main>
+<section id="dashboard" class="panel active">
+  <h2>Dashboard</h2>
+  <div class="kpis">
+    <div><b id="kAnalises">0</b><span>Análises</span></div>
+    <div><b id="kAlertas">0</b><span>Alertas</span></div>
+    <div><b id="kRelatorios">0</b><span>Relatórios</span></div>
+    <div><b id="kIA">0</b><span>Pedidos IA</span></div>
+  </div>
+  <div class="cloud-box">
+    <h3>Memória online</h3>
+    <p class="hint">Usa o mesmo código no PC e no telemóvel para carregar e gravar a mesma memória.</p>
+    <div class="grid">
+      <label>Código de acesso<input id="accessCode" type="password" placeholder="Código definido na Vercel"></label>
+      <label>Estado<input id="cloudStatus" readonly value="Ainda não sincronizado"></label>
+    </div>
+    <button onclick="cloudLoad()">Carregar memória online</button>
+    <button onclick="cloudSaveNow()">Guardar agora</button>
+    <button class="secondary" onclick="exportarMemoria()">Exportar cópia JSON</button>
+    <input id="importFile" type="file" accept=".json" onchange="importarMemoria(event)">
+  </div>
+  <div id="log" class="result">Sem atividade registada.</div>
+  <h3>Registos guardados</h3>
+  <div id="records" class="cards"></div>
+</section>
+
+<section id="posso" class="panel">
+  <h2>Posso Fazer?</h2>
+  <p class="hint">Pré-validação de compra, contratação ou despesa antes de avançar.</p>
+  <div class="grid">
+    <label>Tipo<select id="pfTipo"><option>Bens</option><option>Serviços</option><option>Empreitada</option></select></label>
+    <label>Valor estimado (€)<input id="pfValor" type="number" min="0" step="0.01"></label>
+    <label>Cabimento?<select id="pfCab"><option>Sim</option><option>Não</option><option>Não sei</option></select></label>
+    <label>Fundos disponíveis?<select id="pfFundos"><option>Sim</option><option>Não</option><option>Não sei</option></select></label>
+    <label>Compromisso registado?<select id="pfComp"><option>Sim</option><option>Não</option><option>Não sei</option></select></label>
+    <label>Mesmo fornecedor/recorrência?<select id="pfRec"><option>Não</option><option>Sim</option><option>Não sei</option></select></label>
+  </div>
+  <textarea id="pfDesc" placeholder="Descreva a necessidade. Ex.: contratação de manutenção informática por 18.000€"></textarea>
+  <button onclick="possoFazer()">Analisar</button>
+  <div id="pfOut" class="result"></div>
+</section>
+
+<section id="auditoria" class="panel">
+  <h2>Auditoria – Foi feito corretamente?</h2>
+  <div id="audChecks" class="checks"></div>
+  <textarea id="auObs" placeholder="Observações do processo"></textarea>
+  <button onclick="auditoria()">Gerar diagnóstico</button>
+  <div id="auOut" class="result"></div>
+</section>
+
+<section id="ia-juridica" class="panel">
+  <h2>IA Jurídica</h2>
+  <p class="hint">Análise jurídica apoiada por IA. A chave fica protegida no backend da Vercel.</p>
+  <div class="grid">
+    <label>Modelo<select id="iaModelo"><option value="openai">ChatGPT / OpenAI</option><option value="anthropic">Claude / Anthropic</option></select></label>
+    <label>Área<select id="iaArea"><option>Contratação Pública</option><option>Despesa e Fundos</option><option>Auditoria</option><option>Controlo Interno</option><option>RGPD/Acesso à Informação</option><option>Recursos Humanos</option><option>Urbanismo</option></select></label>
+  </div>
+  <textarea id="iaPergunta" placeholder="Ex.: Posso contratar serviços de manutenção por 18.000€, existindo cabimento mas ainda sem compromisso?"></textarea>
+  <button onclick="iaJuridica()">Analisar com IA</button>
+  <button onclick="motorLocal()">Responder pelo motor local</button>
+  <div id="iaOut" class="result"></div>
+</section>
+
+<section id="leitor-processos" class="panel">
+  <h2>Leitor de Processos</h2>
+  <p class="hint">Carrega TXT ou cola texto do processo. PDF/DOCX podem ser tratados numa fase posterior.</p>
+  <div class="grid">
+    <label>Tipo de análise<select id="lpTipo"><option>Contratação Pública</option><option>Despesa/Fundos</option><option>Auditoria Geral</option><option>RGPD/Acesso</option><option>Recursos Humanos</option></select></label>
+    <label>Modelo<select id="lpModelo"><option value="openai">ChatGPT / OpenAI</option><option value="anthropic">Claude / Anthropic</option></select></label>
+  </div>
+  <input id="lpFile" type="file" accept=".txt,.pdf,.doc,.docx,.xlsx,.xls">
+  <textarea id="lpTexto" placeholder="Texto extraído do processo ou colado manualmente"></textarea>
+  <button onclick="lerFicheiroLocal()">Ler TXT local</button>
+  <button onclick="analisarProcessoIA()">Analisar Processo com IA</button>
+  <div id="lpOut" class="result"></div>
+</section>
+
+<section id="programa" class="panel">
+  <h2>Programa de Trabalho</h2>
+  <div class="grid">
+    <label>Área<select id="ptArea"><option>Contratação Pública</option><option>Despesa e Fundos</option><option>Recursos Humanos</option><option>Urbanismo</option><option>RGPD/Acesso à Informação</option><option>Património</option></select></label>
+    <label>Período<input id="ptPeriodo"></label>
+    <label>Âmbito<input id="ptAmbito"></label>
+    <label>Responsável<input id="ptResp"></label>
+  </div>
+  <textarea id="ptObj" placeholder="Objetivo da auditoria"></textarea>
+  <button onclick="programa()">Gerar programa</button>
+  <button onclick="copiar('ptOut')">Copiar</button>
+  <div id="ptOut" class="result"></div>
+</section>
+
+<section id="relatorio" class="panel">
+  <h2>Relatório</h2>
+  <div class="grid">
+    <label>Objeto<input id="rObj"></label>
+    <label>Serviço<input id="rServ"></label>
+    <label>Período<input id="rPeriodo"></label>
+    <label>Risco<select id="rRisco"><option>Baixo</option><option>Médio</option><option>Elevado</option></select></label>
+  </div>
+  <textarea id="rFactos" placeholder="Factos"></textarea>
+  <textarea id="rLeis" placeholder="Legislação aplicável"></textarea>
+  <textarea id="rConst" placeholder="Constatações"></textarea>
+  <textarea id="rRec" placeholder="Recomendações"></textarea>
+  <button onclick="relatorio()">Gerar relatório</button>
+  <button onclick="copiar('rOut')">Copiar</button>
+  <div id="rOut" class="result"></div>
+</section>
+
+<section id="controlo" class="panel">
+  <h2>Controlo Interno</h2>
+  <div class="grid">
+    <label>Área<input id="ciArea"></label>
+    <label>Risco<select id="ciRisco"><option>Baixo</option><option>Médio</option><option>Elevado</option></select></label>
+    <label>Responsável<input id="ciResp"></label>
+    <label>Prazo<input id="ciPrazo" type="date"></label>
+  </div>
+  <textarea id="ciFalha" placeholder="Falha detetada"></textarea>
+  <textarea id="ciMedida" placeholder="Medida de melhoria"></textarea>
+  <button onclick="controlo()">Registar</button>
+  <div id="ciOut" class="result"></div>
+</section>
+
+<section id="inspecao" class="panel">
+  <h2>Inspeções / Inquéritos / Sindicâncias</h2>
+  <div class="grid">
+    <label>Tipo<select id="inTipo"><option>Inspeção</option><option>Inquérito</option><option>Sindicância</option></select></label>
+    <label>Serviço<input id="inServ"></label>
+    <label>Determinação<input id="inDet" placeholder="Câmara/Presidente"></label>
+    <label>Data<input id="inData" type="date"></label>
+  </div>
+  <textarea id="inFactos" placeholder="Factos a apurar"></textarea>
+  <textarea id="inDil" placeholder="Diligências separadas por ;"></textarea>
+  <button onclick="inspecao()">Gerar plano</button>
+  <button onclick="copiar('inOut')">Copiar</button>
+  <div id="inOut" class="result"></div>
+</section>
+
+<section id="bsc" class="panel">
+  <h2>Plano de Atividades / BSC</h2>
+  <div class="grid">
+    <label>Objetivo<input id="bObj"></label>
+    <label>KPI<input id="bKpi"></label>
+    <label>Meta<input id="bMeta"></label>
+    <label>Prazo<input id="bPrazo" type="date"></label>
+  </div>
+  <textarea id="bAcoes" placeholder="Ações previstas"></textarea>
+  <button onclick="bsc()">Registar</button>
+  <div id="bOut" class="result"></div>
+</section>
+
+<section id="biblioteca" class="panel">
+  <h2>Biblioteca Jurídica</h2>
+  <input id="bibQ" oninput="biblioteca()" placeholder="Pesquisar: compromisso, cabimento, fracionamento, RGPD, competência">
+  <div id="bibOut" class="cards"></div>
+</section>
+</main>
+
+<footer>Ferramenta de apoio. Não substitui análise jurídica, financeira ou decisão superior. Dados sincronizados apenas quando a memória online estiver configurada.</footer>
+<script src="config.js"></script>
+<script src="legal-base.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

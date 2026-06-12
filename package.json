@@ -1,0 +1,11 @@
+{
+  "name": "auditia-municipal-ultra-online",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "openai": "^4.72.0"
+  }
+}
