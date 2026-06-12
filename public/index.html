@@ -39,7 +39,9 @@
     <button class="secondary" onclick="exportarMemoria()">Exportar cópia JSON</button>
     <input id="importFile" type="file" accept=".json" onchange="importarMemoria(event)">
   </div>
-  <div id="log" class="result">Sem atividade registada.</div>
+  
+    <div id="log" class="result">Sem atividade registada.</div>
+<button class="secondary" onclick="clearLog()">Limpar histórico</button>
   <h3>Registos guardados</h3>
   <div id="records" class="cards"></div>
 </section>
