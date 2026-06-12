@@ -1,0 +1,13 @@
+{
+  "name": "auditia-municipal-ultra",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AuditIA Municipal Ultra - aplicação web com API Vercel para apoio à auditoria municipal",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "openai": "^4.72.0"
+  }
+}

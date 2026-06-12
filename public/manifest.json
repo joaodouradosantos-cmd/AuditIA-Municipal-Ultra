@@ -1,0 +1,9 @@
+{
+  "name": "AuditIA Local Pro",
+  "short_name": "AuditIA Pro",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f1711",
+  "theme_color": "#6fa36b",
+  "icons": []
+}
