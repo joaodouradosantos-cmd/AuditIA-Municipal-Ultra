@@ -1,8 +1,10 @@
+import crypto from 'crypto';
 import { checkMethod, requireAccess, supabaseAdmin } from './_common.js';
 
 function getMemoryId(req) {
   const code = req.headers['x-auditia-code'] || req.body?.accessCode || req.query?.accessCode || process.env.AUDITIA_ACCESS_CODE || 'default';
-  return `memory-${String(code).trim()}`;
+  const hash = crypto.createHash('sha256').update(String(code).trim()).digest('hex').slice(0, 32);
+  return `memory-${hash}`;
 }
 
 export default async function handler(req, res) {
