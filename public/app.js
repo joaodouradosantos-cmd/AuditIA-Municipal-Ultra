@@ -47,3 +47,34 @@ function importarMemoria(ev){const f=ev.target.files[0];if(!f)return;const r=new
 
 document.addEventListener("input",e=>{if(e.target&&e.target.id){persistLocal();queueCloudSave()}});
 window.addEventListener("load",()=>{const code=localStorage.getItem("auditia_access_code")||"";const el=document.getElementById("accessCode");if(el)el.value=code;try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");if(saved.forms)restoreForms(saved.forms)}catch(e){}dash();});
+
+function deleteRecord(id){
+  RECORDS = RECORDS.filter(r => r.id !== id);
+  renderRecords();
+  persistLocal();
+  queueCloudSave();
+}
+
+function renameRecord(id){
+  const rec = RECORDS.find(r => r.id === id);
+  if(!rec) return;
+  const current = rec.customName || rec.tipo;
+  const newName = prompt("Novo título do registo:", current);
+  if(newName && newName.trim()){
+    rec.customName = newName.trim();
+    renderRecords();
+    persistLocal();
+    queueCloudSave();
+  }
+}
+
+function renderRecords(){
+  const el = document.getElementById("records");
+  if(!el) return;
+  el.innerHTML = RECORDS.length ?
+    RECORDS.slice(0,20).map(r =>
+      `<div class="card"><small>${new Date(r.createdAt).toLocaleString("pt-PT")}</small><h3>${escapeHtml(r.customName || r.tipo)}</h3><div>${r.html}</div><div class="record-actions"><button class="rename-btn" onclick="renameRecord('${r.id}')">Renomear</button> <button class="delete-btn" onclick="deleteRecord('${r.id}')">Eliminar</button></div></div>`
+    ).join("")
+    : "<p class='hint'>Ainda não há registos guardados.</p>";
+}
+
