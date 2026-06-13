@@ -85,14 +85,14 @@
 
 <section id="leitor-processos" class="panel">
   <h2>Leitor de Processos</h2>
-  <p class="hint">Carrega TXT ou cola texto do processo. PDF/DOCX podem ser tratados numa fase posterior.</p>
+  <p class="hint">Carrega TXT, PDF ou DOCX, ou cola texto do processo.</p>
   <div class="grid">
     <label>Tipo de análise<select id="lpTipo"><option>Contratação Pública</option><option>Despesa/Fundos</option><option>Auditoria Geral</option><option>RGPD/Acesso</option><option>Recursos Humanos</option></select></label>
     <label>Modelo<select id="lpModelo"><option value="openai">ChatGPT / OpenAI</option><option value="anthropic">Claude / Anthropic</option></select></label>
   </div>
   <input id="lpFile" type="file" accept=".txt,.pdf,.doc,.docx,.xlsx,.xls">
   <textarea id="lpTexto" placeholder="Texto extraído do processo ou colado manualmente"></textarea>
-  <button onclick="lerFicheiroLocal()">Ler TXT local</button>
+  <button onclick="lerFicheiroLocal()">Ler ficheiro</button>
   <button onclick="analisarProcessoIA()">Analisar Processo com IA</button>
   <div id="lpOut" class="result"></div>
 </section>
@@ -125,6 +125,7 @@
   <textarea id="rRec" placeholder="Recomendações"></textarea>
   <button onclick="relatorio()">Gerar relatório</button>
   <button onclick="copiar('rOut')">Copiar</button>
+  <button onclick="exportRelatorioPDF()">Exportar PDF</button>
   <div id="rOut" class="result"></div>
 </section>
 
@@ -181,5 +182,7 @@
 <script src="config.js"></script>
 <script src="legal-base.js"></script>
 <script src="app.js"></script>
+<script src="export-pdf.js"></script>
+<script src="enhancements.js"></script>
 </body>
 </html>
