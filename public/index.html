@@ -125,7 +125,7 @@
   <textarea id="rRec" placeholder="Recomendações"></textarea>
   <button onclick="relatorio()">Gerar relatório</button>
   <button onclick="copiar('rOut')">Copiar</button>
-  <button onclick="exportRelatorioPDF()">Exportar PDF</button>
+  <button onclick="exportDoc('rOut','relatorio-cmm-editavel')">Exportar Word editável</button>
   <div id="rOut" class="result"></div>
 </section>
 
@@ -182,6 +182,7 @@
 <script src="config.js"></script>
 <script src="legal-base.js"></script>
 <script src="app.js"></script>
+<script src="export-word.js"></script>
 <script src="export-pdf.js"></script>
 <script src="enhancements.js"></script>
 </body>
