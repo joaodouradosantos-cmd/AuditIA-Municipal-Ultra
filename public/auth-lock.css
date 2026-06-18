@@ -1,0 +1,40 @@
+body.auth-locked nav,
+body.auth-locked main,
+body.auth-locked footer {
+  display: none !important;
+}
+
+#authOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: linear-gradient(135deg, #0f2113, #254f2e);
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  background: #ffffff;
+  color: #172116;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 20px 80px rgba(0,0,0,.35);
+  border: 1px solid #d8dfd4;
+}
+
+.auth-card h1 {
+  color: #234b2b;
+  font-size: 24px;
+  margin: 0 0 8px 0;
+}
+
+.auth-card .toolbar {
+  margin-top: 10px;
+}
+
+.auth-card input {
+  background: #fff;
+}
