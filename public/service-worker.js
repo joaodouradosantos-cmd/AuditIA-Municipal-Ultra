@@ -1,4 +1,4 @@
-const CACHE = "auditia-ultra-online-v6";
+const CACHE = "auditia-ultra-online-v7";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const ASSETS = [
   "./app.js",
   "./legal-base.js",
   "./config.js",
+  "./auth-ui.js",
   "./export-word.js",
   "./export-pdf.js",
   "./enhancements.js",
