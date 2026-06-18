@@ -2,6 +2,8 @@ import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 
+const DEFAULT_SUPABASE_URL = 'https://apllhzozqjevkrxjgtzb.supabase.co';
+
 export const SYSTEM_PROMPT = `
 És um assistente de apoio à auditoria municipal em Portugal.
 Responde em português de Portugal, com rigor, mas sem afirmar que algo é definitivamente legal.
@@ -38,9 +40,10 @@ export function requireAccess(req, res) {
 }
 
 export function supabaseAdmin() {
-  const url = process.env.SUPABASE_URL;
+  const rawUrl = (process.env.SUPABASE_URL || DEFAULT_SUPABASE_URL).trim();
+  const url = rawUrl.startsWith('http') ? rawUrl : DEFAULT_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY não configurados na Vercel.');
+  if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY não configurada na Vercel.');
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
