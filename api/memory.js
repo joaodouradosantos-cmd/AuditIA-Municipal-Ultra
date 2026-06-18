@@ -1,18 +1,26 @@
 import crypto from 'crypto';
 import { checkMethod, requireAccess, supabaseAdmin } from './_common.js';
+import { getSessionUser } from './auth.js';
 
-function getMemoryId(req) {
+function codeMemoryId(req) {
   const code = req.headers['x-auditia-code'] || req.body?.accessCode || req.query?.accessCode || process.env.AUDITIA_ACCESS_CODE || 'default';
   const hash = crypto.createHash('sha256').update(String(code).trim()).digest('hex').slice(0, 32);
   return `memory-${hash}`;
 }
 
+async function getMemoryId(req, supabase) {
+  const user = await getSessionUser(req, supabase);
+  if (user?.id) return `user-${user.id}`;
+  if (!requireAccess(req, { status: () => ({ send: () => {} }) })) return null;
+  return codeMemoryId(req);
+}
+
 export default async function handler(req, res) {
   if (!checkMethod(req, res, ['GET', 'POST'])) return;
-  if (!requireAccess(req, res)) return;
   try {
     const supabase = supabaseAdmin();
-    const memoryId = getMemoryId(req);
+    const memoryId = await getMemoryId(req, supabase);
+    if (!memoryId) return res.status(401).send('Sessão ou código de acesso inválido.');
 
     if (req.method === 'GET') {
       const { data, error } = await supabase
