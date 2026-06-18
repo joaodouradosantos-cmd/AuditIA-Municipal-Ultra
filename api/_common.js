@@ -40,8 +40,7 @@ export function requireAccess(req, res) {
 }
 
 export function supabaseAdmin() {
-  const rawUrl = (process.env.SUPABASE_URL || DEFAULT_SUPABASE_URL).trim();
-  const url = rawUrl.startsWith('http') ? rawUrl : DEFAULT_SUPABASE_URL;
+  const url = DEFAULT_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY não configurada na Vercel.');
   return createClient(url, key, { auth: { persistSession: false } });
