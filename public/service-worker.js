@@ -1,4 +1,4 @@
-const CACHE = "auditia-ultra-online-v10";
+const CACHE = "auditia-ultra-online-v11";
 const ASSETS = [
   "./",
   "./index.html",
@@ -12,7 +12,9 @@ const ASSETS = [
   "./export-pdf.js",
   "./enhancements.js",
   "./bsc-cmm.js",
-  "./manifest.json"
+  "./manifest.json",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
