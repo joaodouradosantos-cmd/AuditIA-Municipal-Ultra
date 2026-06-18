@@ -19,7 +19,7 @@ Nunca substituas decisão jurídica, financeira ou hierárquica.
 export function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-AuditIA-Code');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-AuditIA-Code, X-AuditIA-Session');
 }
 
 export function checkMethod(req, res, methods = ['POST']) {
