@@ -1,9 +1,10 @@
 import crypto from 'crypto';
-import { checkMethod, requireAccess, supabaseAdmin } from './_common.js';
+import { checkMethod, supabaseAdmin } from './_common.js';
 
 const ITERATIONS = 120000;
 const KEYLEN = 32;
 const DIGEST = 'sha256';
+const OWNER_EMAIL = 'joaodouradosantos@gmail.com';
 
 function normEmail(email) {
   return String(email || '').trim().toLowerCase();
@@ -50,6 +51,10 @@ export async function getSessionUser(req, supabase = supabaseAdmin()) {
   return user;
 }
 
+function isOwner(user) {
+  return user?.role === 'owner' && normEmail(user.email) === OWNER_EMAIL;
+}
+
 export default async function handler(req, res) {
   if (!checkMethod(req, res, ['GET', 'POST'])) return;
   const supabase = supabaseAdmin();
@@ -62,9 +67,11 @@ export default async function handler(req, res) {
     }
 
     if (action === 'invite') {
-      if (!requireAccess(req, res)) return;
+      const owner = await getSessionUser(req, supabase);
+      if (!isOwner(owner)) return res.status(403).send('Apenas o proprietário pode criar convites.');
       const email = normEmail(req.body?.email);
       if (!email || !email.includes('@')) return res.status(400).send('Email inválido.');
+      if (email === OWNER_EMAIL) return res.status(400).send('O proprietário já existe.');
       const token = crypto.randomBytes(24).toString('hex');
       const tokenHash = hashToken(token);
       const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString();
@@ -79,6 +86,7 @@ export default async function handler(req, res) {
       const password = String(req.body?.password || '');
       const inviteToken = String(req.body?.inviteToken || '');
       if (!email || !password || password.length < 8 || !inviteToken) return res.status(400).send('Email, convite e senha com pelo menos 8 caracteres são obrigatórios.');
+      if (email === OWNER_EMAIL) return res.status(400).send('A conta de proprietário já está reservada.');
       const tokenHash = hashToken(inviteToken);
       const { data: invite, error: inviteError } = await supabase
         .from('auditia_invites')
