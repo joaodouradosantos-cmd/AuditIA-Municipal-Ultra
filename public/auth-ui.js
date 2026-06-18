@@ -55,8 +55,13 @@ function auditiaUnlockApp() {
 
 function auditiaRenderAuthStatus() {
   const user = auditiaAuthUser();
+  const email = user?.email || 'Sem sessão';
   const el = document.getElementById('authStatus');
-  if (el) el.value = user ? `Ligado como ${user.email}` : 'Sem sessão iniciada';
+  if (el) el.value = email;
+  const chip = document.getElementById('accountChipEmail');
+  if (chip) chip.textContent = email;
+  const role = document.getElementById('accountChipRole');
+  if (role) role.textContent = auditiaIsOwner(user) ? 'Proprietário' : 'Utilizador';
   const ownerArea = document.getElementById('ownerInviteArea');
   if (ownerArea) ownerArea.style.display = auditiaIsOwner(user) ? 'block' : 'none';
 }
@@ -87,31 +92,40 @@ function auditiaEnsureOverlay() {
 
 function auditiaAddAuthBox() {
   if (document.getElementById('authBox')) return;
-  const cloud = document.querySelector('.cloud-box');
-  if (!cloud) return;
+  const dashboard = document.getElementById('dashboard');
+  const memoryBox = dashboard?.querySelector('.cloud-box');
+  if (memoryBox) memoryBox.style.display = 'none';
+  if (!dashboard) return;
+
   const box = document.createElement('div');
   box.id = 'authBox';
-  box.className = 'cloud-box';
+  box.className = 'account-panel';
   box.innerHTML = `
-    <h3>Acesso por utilizador</h3>
-    <p class="hint">Cada utilizador tem email/senha e memória privada sincronizada automaticamente entre PC e telemóvel.</p>
-    <div class="grid">
-      <label>Estado<input id="authStatus" readonly value="Sem sessão iniciada"></label>
-      <label>Utilizador proprietário<input readonly value="${AUTH_OWNER}"></label>
+    <div class="account-line">
+      <div>
+        <b>Conta ativa</b><br>
+        <span id="accountChipEmail">Sem sessão</span>
+        <small id="accountChipRole">Utilizador</small>
+      </div>
+      <div class="account-actions">
+        <button class="secondary" onclick="cloudSaveNow(true)">Sincronizar agora</button>
+        <button class="secondary" onclick="auditiaLogout()">Sair</button>
+      </div>
     </div>
-    <button class="secondary" onclick="auditiaLogout()">Sair deste equipamento</button>
     <div id="ownerInviteArea" style="display:none">
       <hr>
-      <h4>Criar convite</h4>
+      <h4>Convites</h4>
       <p class="hint">Só o proprietário pode gerar convites. Copia o link e envia à pessoa.</p>
       <div class="grid">
         <label>Email a convidar<input id="inviteEmail" type="email" placeholder="email da pessoa"></label>
+        <label>Conta ligada<input id="authStatus" readonly value="Sem sessão iniciada"></label>
       </div>
       <button onclick="auditiaCreateInvite()">Gerar link de convite</button>
       <div id="inviteOut" class="result"></div>
     </div>
   `;
-  cloud.insertAdjacentElement('afterend', box);
+  const kpis = dashboard.querySelector('.kpis');
+  if (kpis) kpis.insertAdjacentElement('afterend', box); else dashboard.prepend(box);
   auditiaRenderAuthStatus();
 }
 
@@ -123,7 +137,6 @@ async function auditiaLogin() {
     auditiaSetSession(data.token, data.user);
     auditiaUnlockApp();
     if (typeof cloudLoad === 'function') await cloudLoad();
-    alert('Sessão iniciada. A memória deste utilizador foi carregada.');
   } catch (error) {
     alert(error.message || error);
   }
@@ -138,7 +151,6 @@ async function auditiaRegister() {
     auditiaSetSession(data.token, data.user);
     auditiaUnlockApp();
     if (typeof cloudSaveNow === 'function') await cloudSaveNow();
-    alert('Conta criada. A app ficou privada para este utilizador.');
   } catch (error) {
     alert(error.message || error);
   }
