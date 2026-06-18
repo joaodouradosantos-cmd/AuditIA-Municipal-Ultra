@@ -38,3 +38,52 @@ body.auth-locked footer {
 .auth-card input {
   background: #fff;
 }
+
+.account-panel {
+  margin: 14px 0;
+  background: #ffffff;
+  border: 1px solid #d8dfd4;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 3px 16px rgba(25,43,22,.05);
+}
+
+.account-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.account-line b {
+  color: #234b2b;
+}
+
+#accountChipEmail {
+  color: #172116;
+  font-weight: 700;
+}
+
+#accountChipRole {
+  display: inline-block;
+  margin-left: 8px;
+  color: #64705f;
+}
+
+.account-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media(max-width:800px) {
+  .account-line {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .account-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
